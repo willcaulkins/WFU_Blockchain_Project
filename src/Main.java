@@ -133,7 +133,7 @@ public class Main {
         Stakeholder buyer2 = new Stakeholder("005", "Will Caulkins", "Will's Address", 10000.00);
         Stakeholder seller2 = new Stakeholder("006", "Sarra Alqahtani", "Sarra's Address" , 10000.00);
         Stakeholder Canada = new Stakeholder("007", "Canada", "1600 Vancouver Ave", 10000.00);
-        Artefact artefact2 = new Artefact("1002", "Hockey Stick", Canada, seller2);
+        Artefact artefact2 = new Artefact("1002", "Hockey Stick", Canada, seller2, buyer1, new Date().getTime(), "Wake Forest", "Stone", 2.0, 8.0, 120.0, 3.0);
         Transaction data2 = new Transaction(artefact2, new Date().getTime(), seller2, buyer2, auctionHouse, 1000);
 
         stakeholders.add(buyer2);
@@ -172,6 +172,7 @@ public class Main {
         genesisBlock.mineBlock(prefix);
         if (genesisBlock.getCurrentHash().substring(0, prefix).equals(prefixString)) {
             blockchain.add(genesisBlock);
+            System.out.println(data1.toString());
         } else {
             System.out.println("Malicious block, not added to the chain");
             gui.messages.setText("Malicious block, not added to the chain");
@@ -181,6 +182,7 @@ public class Main {
         secondBlock.mineBlock(prefix);
         if (secondBlock.getCurrentHash().substring(0, prefix).equals(prefixString) &&  verify_Blockchain(blockchain)) {
             blockchain.add(secondBlock);
+            System.out.println(data2.toString());
         } else {
             System.out.println("Malicious block, not added to the chain");
             gui.messages.setText("Malicious block, not added to the chain");
@@ -190,6 +192,7 @@ public class Main {
         newBlock.mineBlock(prefix);
         if (newBlock.getCurrentHash().substring(0, prefix).equals(prefixString) &&  verify_Blockchain(blockchain)) {
             blockchain.add(newBlock);
+            System.out.println(data3.toString());
         } else {
             System.out.println("Malicious block, not added to the chain");
             gui.messages.setText("Malicious block, not added to the chain");

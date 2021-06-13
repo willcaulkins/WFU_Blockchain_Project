@@ -86,12 +86,12 @@ public class Transaction {
     @Override
     public String toString() {
         Date time = new Date(this.timestamp);
-        String result = "Artefact: " + this.artefact.hashToString();
-        result += "\nTimestamp: " + time;
-        result += "\nBailee: \n" + this.seller.getName();
-        result += "\nLBailor: \n" + this.artefact.getLegalOwner();
-        result += "\nBuyer: \n" + this.buyer.getName();
-        result += "\nAuction House: \n" + this.auctionHouse.getName();
+        String result = "Artefact: \n" + this.artefact.toString();
+        result += "\nTransaction Timestamp: " + time;
+        result += "\nBailee: " + this.seller.getName();
+        result += "\nBailor: " + this.artefact.getLegalOwner().getName();
+        result += "\nBuyer: " + this.buyer.getName();
+        result += "\nAuction House: " + this.auctionHouse.getName();
         result += "\nPrice: $" + this.price;
         return result;
     }

@@ -15,6 +15,7 @@ import java.util.Date;
 public class gui extends JPanel{ //Gui through which the blockchain runs
     public DefaultComboBoxModel buyerModel;
     public DefaultComboBoxModel sellerModel;
+    public DefaultComboBoxModel artistModel;
     public DefaultComboBoxModel auctionHouseModel;
     public DefaultComboBoxModel artefactModel;
     public DefaultComboBoxModel COOModel;
@@ -120,10 +121,10 @@ public class gui extends JPanel{ //Gui through which the blockchain runs
                                            guiBlock.mineBlock(4);
                                            if (guiBlock.getCurrentHash().substring(0, 4).equals("0000") &&  Main.verify_Blockchain(Main.blockchain)) {
                                                Main.blockchain.add(guiBlock);
+                                               messages.setText("Block added successfully!");
+                                               System.out.println("\n ------- New Block -------\n");
                                                System.out.println(Main.blockchain.get(Main.blockchain.size()-1).getData().toString());
                                                System.out.println();
-                                               messages.setText("Block added successfully!");
-                                               System.out.println(Main.blockchain.get(Main.blockchain.size()-1).getData().toString());
                                                System.out.println();
                                            } else {
                                                System.out.println("Malicious block, not added to the chain");
@@ -261,10 +262,27 @@ public class gui extends JPanel{ //Gui through which the blockchain runs
         artefactModel = new DefaultComboBoxModel(Main.artefactArr.toArray());
         buyerModel = new DefaultComboBoxModel(Main.stakeholderArr.toArray());
         sellerModel = new DefaultComboBoxModel(Main.stakeholderArr.toArray());
+        artistModel = new DefaultComboBoxModel(Main.stakeholderArr.toArray());
         JLabel lId4 = new JLabel("ID:");
         JTextField id4 = new JTextField(20);
         JLabel lName4 = new JLabel("Name:");
         JTextField name4 = new JTextField(20);
+        JLabel lartist = new JLabel("Artist:");
+        JComboBox artist = new JComboBox(artistModel);
+        JLabel lCreationDate = new JLabel("Date of Creation:");
+        JTextField creationDate = new JTextField(20);
+        JLabel lCreationLocation = new JLabel("Creation Location:");
+        JTextField creationLocation = new JTextField(20);
+        JLabel lMedium = new JLabel("Medium:");
+        JTextField medium = new JTextField(20);
+        JLabel lDimensionX = new JLabel("X Dimension:");
+        JTextField dimensionX = new JTextField(20);
+        JLabel lDimensionY = new JLabel("Y Dimension:");
+        JTextField dimensionY = new JTextField(20);
+        JLabel lDimensionZ = new JLabel("Z Dimension:");
+        JTextField dimensionZ = new JTextField(20);
+        JLabel lWeight = new JLabel("Weight:");
+        JTextField weight = new JTextField(20);
         JLabel lCOO4 = new JLabel("Bailor:");
         JComboBox cOO4 = new JComboBox(buyerModel);
         JLabel lCurrentOwner4 = new JLabel("Current Owner:");
@@ -274,6 +292,22 @@ public class gui extends JPanel{ //Gui through which the blockchain runs
         panel4.add(id4);
         panel4.add(lName4);
         panel4.add(name4);
+        panel4.add(lartist);
+        panel4.add(artist);
+        panel4.add(lCreationDate);
+        panel4.add(creationDate);
+        panel4.add(lCreationLocation);
+        panel4.add(creationLocation);
+        panel4.add(lMedium);
+        panel4.add(medium);
+        panel4.add(lDimensionX);
+        panel4.add(dimensionX);
+        panel4.add(lDimensionY);
+        panel4.add(dimensionY);
+        panel4.add(lDimensionZ);
+        panel4.add(dimensionZ);
+        panel4.add(lWeight);
+        panel4.add(weight);
         panel4.add(lCOO4);
         panel4.add(cOO4);
         panel4.add(lCurrentOwner4);
@@ -288,8 +322,10 @@ public class gui extends JPanel{ //Gui through which the blockchain runs
             public void actionPerformed(ActionEvent e) { //ActionListener for the "Add Artefact" button to create new artefact in the system
                 String currOwn = currentOwner4.getItemAt(currentOwner4.getSelectedIndex()).toString();
                 String cOO = cOO4.getItemAt(cOO4.getSelectedIndex()).toString();
+                String currArt = artist.getItemAt(artist.getSelectedIndex()).toString();
                 Stakeholder currOwner = new Stakeholder();
                 Stakeholder countryOfO = new Stakeholder();
+                Stakeholder currArtist = new Stakeholder();
                 int i=0;
                 for (Stakeholder s : Main.stakeholders) {
                     if (s.getName().equals(currOwn)) {
@@ -298,9 +334,34 @@ public class gui extends JPanel{ //Gui through which the blockchain runs
                     if (s.getName().equals(cOO)) {
                         countryOfO = Main.stakeholders.get(i);
                     }
+                    if (s.getName().equals(currArt)) {
+                        currArtist = Main.stakeholders.get(i);
+                    }
                     i++;
                 }
                 Artefact newArtefact = new Artefact(id4.getText(),name4.getText(), countryOfO, currOwner);
+                newArtefact.setArtist(currArtist);
+                if (!creationDate.getText().equals("")) {
+                    newArtefact.setDateOfCreation(Long.parseLong(creationDate.getText()));
+                }
+                if (!creationLocation.getText().equals("")) {
+                    newArtefact.setCreationLocation(creationLocation.getText());
+                }
+                if (!medium.getText().equals("")) {
+                    newArtefact.setMedium(medium.getText());
+                }
+                if (!dimensionX.getText().equals("")) {
+                    newArtefact.setDimensionX(Double.parseDouble(dimensionX.getText()));
+                }
+                if (!dimensionY.getText().equals("")) {
+                    newArtefact.setDimensionY(Double.parseDouble(dimensionY.getText()));
+                }
+                if (!dimensionZ.getText().equals("")) {
+                    newArtefact.setDimensionZ(Double.parseDouble(dimensionZ.getText()));
+                }
+                if (!weight.getText().equals("")) {
+                    newArtefact.setWeightLbs(Double.parseDouble(weight.getText()));
+                }
                 Main.artefacts.add(newArtefact);
                 Main.artefactArr.add(newArtefact.getName());
                 artefactModel = new DefaultComboBoxModel(Main.artefactArr.toArray());
