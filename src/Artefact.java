@@ -23,6 +23,7 @@ public class Artefact {
     private double dimensionY;
     private double dimensionZ;
     private double weightLbs;
+    private double appraisedValue;
 
     public Artefact() {
         this.id = null;
@@ -38,6 +39,7 @@ public class Artefact {
         this.dimensionY = 0.0;
         this.dimensionZ = 0.0;
         this.weightLbs = 0.0;
+        this.appraisedValue = 0.0;
     }
 
     public Artefact(String id, String name, Stakeholder legalOwner, Stakeholder currentOwner) {
@@ -48,7 +50,8 @@ public class Artefact {
         this.stakeOfLegalOwner = 40;
     }
 
-    public Artefact(String id, String name, Stakeholder legalOwner, Stakeholder currentOwner, Stakeholder artist, Long dateOfCreation, String creationLocation, String medium, double dimensionX, double dimensionY, double dimensionZ, double weightLbs) {
+
+    public Artefact(String id, String name, Stakeholder legalOwner, Stakeholder currentOwner, Stakeholder artist, Long dateOfCreation, String creationLocation, String medium, double dimensionX, double dimensionY, double dimensionZ, double weightLbs, double appraisedValue) {
         this.id = id;
         this.name = name;
         this.legalOwner = legalOwner;
@@ -62,6 +65,7 @@ public class Artefact {
         this.dimensionY = dimensionY;
         this.dimensionZ = dimensionZ;
         this.weightLbs = weightLbs;
+        this.appraisedValue = appraisedValue;
     }
 
     public Stakeholder getArtist() {
@@ -168,6 +172,14 @@ public class Artefact {
         this.stakeOfLegalOwner = stakeOfLegalOwner;
     }
 
+    public double getAppraisedValue() {
+        return appraisedValue;
+    }
+
+    public void setAppraisedValue(double appraisedValue) {
+        this.appraisedValue = appraisedValue;
+    }
+
     @Override
     public String toString() {
         String result = "ID: " + this.id;
@@ -193,6 +205,11 @@ public class Artefact {
             result += "\nMedium: " + this.medium;
         } else {
             result += "\nMedium: unknown";
+        }
+        if (appraisedValue != 0.0) {
+            result += "\nAppraised Value: " + this.appraisedValue;
+        } else {
+            result += "\nAppraised Value: unknown";
         }
         if (dimensionX==0.0 || dimensionY==0.0 || dimensionZ==0.0) {
             result += "\nDimensions: unknown";

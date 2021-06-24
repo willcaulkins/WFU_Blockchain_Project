@@ -14,6 +14,8 @@ import java.util.Date;
 
 public class gui extends JPanel{ //Gui through which the blockchain runs
     public DefaultComboBoxModel buyerModel;
+    public DefaultComboBoxModel donorModel;
+    public DefaultComboBoxModel museumModel;
     public DefaultComboBoxModel sellerModel;
     public DefaultComboBoxModel artistModel;
     public DefaultComboBoxModel auctionHouseModel;
@@ -26,7 +28,7 @@ public class gui extends JPanel{ //Gui through which the blockchain runs
         JTabbedPane tabbedPane = new JTabbedPane();
 
         JPanel mainPane = new JPanel();
-        tabbedPane.addTab("Block", mainPane);
+        tabbedPane.addTab("Purchased Artefact", mainPane);
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
         JLabel lBuy = new JLabel("Buyer");
         buyerModel = new DefaultComboBoxModel(Main.stakeholderArr.toArray());
@@ -43,7 +45,7 @@ public class gui extends JPanel{ //Gui through which the blockchain runs
         JTextField price = new JTextField(20);
         JLabel lDate = new JLabel("Date of Transaction(yyyy/MM/dd HH:mm:ss.SSS):");
         JTextField date = new JTextField(20);
-        JButton addBlock = new JButton("Add Block");
+        JButton addBlock = new JButton("Add Transaction");
         messages = new JLabel("Messages: ");
 
         mainPane.add(lBuy);
@@ -119,7 +121,111 @@ public class gui extends JPanel{ //Gui through which the blockchain runs
 
                                            Block guiBlock = new Block(transGui, Main.blockchain.get(Main.blockchain.size() - 1).getCurrentHash(), new Date().getTime());
                                            guiBlock.mineBlock(4);
-                                           if (guiBlock.getCurrentHash().substring(0, 4).equals("0000") &&  Main.verify_Blockchain(Main.blockchain)) {
+                                           if (guiBlock.getCurrentHash().substring(0, 4).equals("0000") /*&&  Main.verify_Blockchain(Main.blockchain)*/) {
+                                               Main.blockchain.add(guiBlock);
+                                               messages.setText("Block added successfully!");
+                                               System.out.println("\n ------- New Block -------\n");
+                                               System.out.println(Main.blockchain.get(Main.blockchain.size()-1).getData().toString());
+                                               System.out.println();
+                                               System.out.println();
+                                           } else {
+                                               System.out.println("Malicious block, not added to the chain");
+                                               messages.setText("Malicious block, not added to the chain");
+                                           }
+                                           /* Above code block verifies the transaction with the input information from the GUI*/
+
+                                       }
+                                   }
+        );
+
+        JPanel panel0 = new JPanel();
+        tabbedPane.addTab("Donated Artefact", panel0);
+        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
+        JLabel lDonor = new JLabel("Donor");
+        donorModel = new DefaultComboBoxModel(Main.stakeholderArr.toArray());
+        JComboBox donor = new JComboBox(donorModel);
+        JLabel lMuseum = new JLabel("Museum");
+        museumModel = new DefaultComboBoxModel(Main.stakeholderArr.toArray());
+        JComboBox museum = new JComboBox(museumModel);
+        JLabel lArtefact0 = new JLabel("Artefact");
+        artefactModel = new DefaultComboBoxModel(Main.artefactArr.toArray());
+        JComboBox artefact0 = new JComboBox(artefactModel);
+        JLabel lDate0 = new JLabel("Date of Donation(yyyy/MM/dd HH:mm:ss.SSS):");
+        JTextField date0 = new JTextField(20);
+        JButton addDonation = new JButton("Add Donation");
+        messages = new JLabel("Messages: ");
+
+        panel0.add(lDonor);
+        panel0.add(donor);
+        panel0.add(lMuseum);
+        panel0.add(museum);
+        panel0.add(lArtefact0);
+        panel0.add(artefact0);
+        panel0.add(lDate0);
+        panel0.add(date0);
+        panel0.add(addBlock);
+        panel0.add(messages);
+
+        panel0.setLayout(new BoxLayout(panel0, BoxLayout.Y_AXIS));
+
+        /* Lines 23-61 set the layout for the Block tab in the gui*/
+
+        addBlock.addActionListener(new ActionListener() { // ActionListener for addBlock button
+                                       @Override
+                                       public void actionPerformed(ActionEvent e) {
+                                           String currDonor = donor.getSelectedItem().toString(); // get buyer of artefact
+                                           Stakeholder donorGui = new Stakeholder();
+                                           int j=0;
+                                           for (Stakeholder b : Main.stakeholders) {
+                                               if (b.getName().equals(currDonor)) {
+                                                   donorGui = Main.stakeholders.get(j); /* Matches current buyer name to
+                                                    * the corresponding buyer in the list of Stakeholders*/
+                                               }
+                                               j++;
+                                           }
+                                           j=0; // reset the counting variable (for convenience)
+
+                                           String currArt = artefact.getItemAt(artefact.getSelectedIndex()).toString();
+                                           Artefact artefactGui = new Artefact();
+                                           for (Artefact d : Main.artefacts) {
+                                               if (d.getName().equals(currArt)) {
+                                                   artefactGui = Main.artefacts.get(j); /* Matches current artefact name to
+                                                    * the corresponding artefact in the list of artefacts*/
+                                               }
+                                               j++;
+                                           }
+                                           j=0;
+
+                                           String currMuseum = museum.getItemAt(museum.getSelectedIndex()).toString();
+                                           Stakeholder museumGui = new Stakeholder();
+                                           for (Stakeholder f : Main.stakeholders) {
+                                               if (f.getName().equals(currMuseum)) {
+                                                   museumGui = Main.stakeholders.get(j); /* Matches current auction house name to
+                                                    * the corresponding auction house in the list of Stakeholders*/
+                                               }
+                                               j++;
+                                           }
+                                           Long finalDate = null;
+                                           if (!date.getText().equals("")) { /* If date of transaction is provided, the
+                                            * the input is converted to a long variable type for inclusion in the new block*/
+                                               String myDate = date.getText();
+                                               SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
+                                               Date date1 = null;
+                                               try {
+                                                   date1 = sdf.parse(myDate);
+                                               } catch (ParseException parseException) {
+                                                   parseException.printStackTrace();
+                                               }
+                                               finalDate = date1.getTime();
+                                           } else { // if no date is provided, the current date and time is recorded
+                                               finalDate = new Date().getTime();
+                                           }
+
+                                           Transaction transGui = new Transaction(artefactGui, finalDate, artefactGui.getCurrentOwner(), museumGui, null, 0.0);
+
+                                           Block guiBlock = new Block(transGui, Main.blockchain.get(Main.blockchain.size() - 1).getCurrentHash(), new Date().getTime());
+                                           guiBlock.mineBlock(4);
+                                           if (guiBlock.getCurrentHash().substring(0, 4).equals("0000") /*&&  Main.verify_Blockchain(Main.blockchain)*/) {
                                                Main.blockchain.add(guiBlock);
                                                messages.setText("Block added successfully!");
                                                System.out.println("\n ------- New Block -------\n");
@@ -273,6 +379,8 @@ public class gui extends JPanel{ //Gui through which the blockchain runs
         JTextField creationDate = new JTextField(20);
         JLabel lCreationLocation = new JLabel("Creation Location:");
         JTextField creationLocation = new JTextField(20);
+        JLabel lAppraisedValue = new JLabel("Appraised Value:");
+        JTextField appraisedValue = new JTextField(20);
         JLabel lMedium = new JLabel("Medium:");
         JTextField medium = new JTextField(20);
         JLabel lDimensionX = new JLabel("X Dimension:");
@@ -298,6 +406,8 @@ public class gui extends JPanel{ //Gui through which the blockchain runs
         panel4.add(creationDate);
         panel4.add(lCreationLocation);
         panel4.add(creationLocation);
+        panel4.add(lAppraisedValue);
+        panel4.add(appraisedValue);
         panel4.add(lMedium);
         panel4.add(medium);
         panel4.add(lDimensionX);
@@ -346,6 +456,9 @@ public class gui extends JPanel{ //Gui through which the blockchain runs
                 }
                 if (!creationLocation.getText().equals("")) {
                     newArtefact.setCreationLocation(creationLocation.getText());
+                }
+                if (!appraisedValue.getText().equals("")) {
+                    newArtefact.setAppraisedValue(Double.parseDouble(appraisedValue.getText()));
                 }
                 if (!medium.getText().equals("")) {
                     newArtefact.setMedium(medium.getText());
@@ -454,6 +567,47 @@ public class gui extends JPanel{ //Gui through which the blockchain runs
                 System.out.println("Success");
                 System.out.println("Bailor: \n" + legalOwner.toString());
                 System.out.println("Bailee: \n" + currentOwner.toString());
+            }
+        });
+
+        JPanel panel7 = new JPanel();
+        tabbedPane.addTab("Retrieve Provenance", panel7);
+        tabbedPane.setMnemonicAt(0, KeyEvent.VK_2);
+        JLabel lSelect = new JLabel("Select Artefact:");
+        artefactModel = new DefaultComboBoxModel(Main.artefactArr.toArray());
+        JComboBox artefact7 = new JComboBox(artefactModel);
+
+        JButton button7 = new JButton("Retrieve Provenance");
+        JLabel status7 = new JLabel("Messages:",JLabel.CENTER);
+        panel7.add(lSelect);
+        panel7.add(artefact7);
+        panel7.add(button7);
+        panel7.add(status7);
+
+        panel7.setLayout(new BoxLayout(panel7, BoxLayout.Y_AXIS));
+
+        button7.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) { //ActionListener for the "Allocate Revenue" button to distribute revenue according to corresponding stakes
+                int j=0;
+                String currArt = artefact7.getItemAt(artefact7.getSelectedIndex()).toString(); //this method implements the fractional ownership and allocation of additional revenues from the artefact
+                Artefact artefactGui2 = new Artefact();
+                for (Artefact d : Main.artefacts) {
+                    if (d.getName().equals(currArt)) {
+                        artefactGui2 = Main.artefacts.get(j);
+                    }
+                    j++;
+                }
+                System.out.println("\n ------ Record of Provenance ------ ");
+                int count = 1;
+                for (Transaction t : Main.retrieveProvenance(artefactGui2.getId())) {
+                    System.out.println("\n --- Transaction " + count + ": ---");
+                    System.out.println(t.toString());
+                    count++;
+                }
+                System.out.println("\n ------ End of Provenance Record ------ \n");
+
+                status7.setText("Provenance printed successfully!");
+                messages.setText("Provenance printed successfully!");
             }
         });
 
